@@ -2,6 +2,7 @@ import os
 
 import config
 from analysis.backtest import get_summary, run_backtest
+from analysis.chart import save_chart
 from analysis.indicators import add_indicators
 from api.binance import fetch_candles
 
@@ -27,10 +28,13 @@ def main():
     print_summary(get_summary(df, config.INTERVAL, config.START_BALANCE))
 
     os.makedirs(config.DATA_DIR, exist_ok=True)
-    csv_path = os.path.join(config.DATA_DIR, f"{config.SYMBOL}_{config.INTERVAL}.csv")
+    file_name = f"{config.SYMBOL}_{config.INTERVAL}"
+    csv_path = os.path.join(config.DATA_DIR, f"{file_name}.csv")
+    chart_path = os.path.join(config.DATA_DIR, f"{file_name}.png")
 
     df.to_csv(csv_path)
-    print(f"\nSaved {csv_path}")
+    save_chart(df, f"{config.SYMBOL} {config.INTERVAL}", config.FAST_WINDOW, config.SLOW_WINDOW, chart_path)
+    print(f"\nSaved {csv_path} and {chart_path}")
 
 
 if __name__ == "__main__":
